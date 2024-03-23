@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 # Initialize speech recognition and text-to-speech engines
 recognizer = sr.Recognizer()
@@ -10,8 +11,10 @@ engine = pyttsx3.init()
 # tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 # model = GPT2LMHeadModel.from_pretrained("gpt2")
 
-tokenizer = GPT2Tokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
-model = GPT2LMHeadModel.from_pretrained("EleutherAI/gpt-neo-1.3B")
+model_name = "t5-small"
+tokenizer = T5Tokenizer.from_pretrained(model_name)
+model = T5ForConditionalGeneration.from_pretrained(model_name)
+
 
 def speech_to_text():
     with sr.Microphone() as source:

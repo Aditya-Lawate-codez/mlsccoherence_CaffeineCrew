@@ -1,6 +1,7 @@
 import speech_recognition as sr
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from transformers import T5ForConditionalGeneration, T5Tokenizer
+from transformers import GPTNeoForCausalLM, GPT2Tokenizer
 import pyttsx3
 
 # Initialize the speech recognizer
@@ -15,9 +16,13 @@ engine = pyttsx3.init()
 # model = GPT2LMHeadModel.from_pretrained(model_name)
 
 # Initialize the T5 model and tokenizer
-model_name = "t5-small"
-tokenizer = T5Tokenizer.from_pretrained(model_name)
-model = T5ForConditionalGeneration.from_pretrained(model_name)
+# model_name = "t5-small"
+# tokenizer = T5Tokenizer.from_pretrained(model_name)
+# model = T5ForConditionalGeneration.from_pretrained(model_name)
+
+model_name = "EleutherAI/gpt-neo-125M"
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model = GPTNeoForCausalLM.from_pretrained(model_name)
 
 def recognize_speech():
     with sr.Microphone() as source:
