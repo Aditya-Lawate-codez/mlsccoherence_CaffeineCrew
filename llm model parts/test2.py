@@ -63,7 +63,7 @@ def get_user_details():
     return details
 
 def main():
-    user_details = get_user_details()
+    # user_details = get_user_details()
     response = generate_response("Thank you for providing the details. A technical assistant will reach you at your preferred time at your place.")
     text_to_speech(response)
 

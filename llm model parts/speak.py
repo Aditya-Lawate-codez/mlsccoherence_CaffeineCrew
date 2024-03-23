@@ -1,11 +1,3 @@
-# from gtts import gTTS
-# import os
-# import speech_recognition as sr
-# from googletrans import Translator
-# import playsound
-
-
-
 import speech_recognition as sr
 from gtts import gTTS
 import os
