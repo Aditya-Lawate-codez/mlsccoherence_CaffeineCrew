@@ -28,3 +28,10 @@ model user{
     problem_detail String
     date DateTime
 }
+
+model account{
+      id       String    @id @default(auto()) @map("_id") @db.ObjectId
+      name String
+      email String
+      password String
+}
