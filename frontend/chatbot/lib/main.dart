@@ -1,4 +1,5 @@
 import 'package:chatbot/screens/home.dart';
+import 'package:chatbot/screens/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ void main() {
          ThemeMode.dark for dark theme
       */
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: LoginPage(),
     ),
   );
 }
