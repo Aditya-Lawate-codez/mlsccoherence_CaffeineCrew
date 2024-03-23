@@ -36,12 +36,12 @@ const getUser=async(req,res)=>{
             return res.status(200).json({success:"true",message:"User authenticated"})
         }
         else{
-            return res.status(404).json({success:true,message:"Password incorrect"})
+            return res.status(404).json({success:false,message:"Password incorrect"})
         }
     }
     else{
         
-        return res.status(400).json({success:true,message:"User was not created"})
+        return res.status(400).json({success:false,message:"User was not created"})
     }
 }
 
