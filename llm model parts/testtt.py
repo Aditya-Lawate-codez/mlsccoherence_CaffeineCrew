@@ -35,49 +35,30 @@ def text_to_speech(text):
     # Speak the text
     engine.say(text)
     engine.runAndWait()
-prompt='''
-You are an excellent Customer Service Assistant with excellent hold in technical services and you are tasked to get the details of the customer who is interacting with you by asking them in a conversational way.
-
-Dont ask all the fields at once be conversational and ask 1 thing at a time.
-
-
-The details that you need to get are 
-Full Name: String Format First_Name Middle_Name Last_Name
-Nature of Issue: String Format New_Issue || Exist_Issue
-Contact: Number phone_number
-Address with pincode: String Format 
-Details of Issue: String format (Long Paragraph)
-Preffered date and time for technical assistants visit: Date and period of day (Morning || Evening || Night)
-
-You have to be very polite and in a way interactive with the user and not force him to provide information necessarily. If the user doesnt give any information do not force them to give. just leave it blank. 
-once you get the deatils tell the user that the technical assistant will be reaching at their preferred time at their place
-
-'''
 
 def generate_response(user_input):
-    input_ids= tokenizer.encode(prompt+user_input, return_tensors='pt')
     # Tokenize the user input
-    # input_ids = tokenizer(user_input, return_tensors="pt").input_ids
+    input_ids = tokenizer(user_input, return_tensors="pt").input_ids
 
     # Generate a response from the model
-    output = model.generate(input_ids, max_length=50, num_return_sequences=1)
+    output = model.generate(input_ids, max_length=100, num_return_sequences=1)
     
     # Decode and return the response
     response = tokenizer.decode(output[0], skip_special_tokens=True)
     return response
+
 def main():
 
     intro = "Hey, this is Ethan. How may I help you?"
     text_to_speech(intro)
     print("CVA:", intro)
+
     user_input=""
-    n =0
+
     while (user_input!="goodbye"):
         user_input = speech_to_text()
         print("User:", user_input)
-        if(n==0):
-            CVA_response = generate_response(prompt + user_input)
-            n+=1
+
         CVA_response = generate_response(user_input)
 
         print(CVA_response)
