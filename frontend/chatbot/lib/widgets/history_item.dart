@@ -7,6 +7,7 @@ class HistoryItem extends StatelessWidget{
   Widget build(BuildContext context) {
     return(Container(
       padding: EdgeInsets.all(8.0),
+      margin: EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(15),
