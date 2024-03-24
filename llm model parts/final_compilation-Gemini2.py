@@ -115,13 +115,12 @@ def main():
         text_to_speech(response)
 
     
-
 def json_save():    
     desired_json_representation = None
 
     for item in messages:
         if item['role'] == 'model':
-            if 'JSON representation' in item['parts'][0]:
+            if '```\n' in item['parts'][0]:
                 desired_json_representation = item['parts'][0].split('```')[1]
                 break
 
