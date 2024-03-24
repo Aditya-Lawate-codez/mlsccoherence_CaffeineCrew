@@ -26,7 +26,7 @@ model user{
     phoneno String 
     address String
     problem_detail String
-    date DateTime
+    nature_of_issue String
 }
 
 model account{

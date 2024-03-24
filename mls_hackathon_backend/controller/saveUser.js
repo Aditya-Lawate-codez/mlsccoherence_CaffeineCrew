@@ -3,12 +3,12 @@ const { PrismaClient } =require('@prisma/client')
 const prisma = new PrismaClient()
 
 const saveUser=async(req,res)=>{
-    const {name,phoneno,address,problem_detail,date}=req.body
+    const {name,phoneno,address,problem_detail,nature_of_issue,date}=req.body
     
    
     const result=await prisma.user.create({
         data:{
-            name,phoneno,address,problem_detail,date
+            name,phoneno,address,problem_detail,nature_of_issue,date
         }
     })
     if(result){
