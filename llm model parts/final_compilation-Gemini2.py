@@ -1,11 +1,10 @@
 import speech_recognition as sr
 import pyttsx3
-# from Google_Gemini import Gemini as gmn
 import google.generativeai as genai
+import json
 GOOGLE_API_KEY='AIzaSyBKFI9vTUNZ2b4sQh-IRSrRb0zb98QsL8o'
 
 genai.configure(api_key=GOOGLE_API_KEY)
-
 model = genai.GenerativeModel('gemini-pro')
 
 def speech_to_text():
@@ -23,6 +22,7 @@ def speech_to_text():
         return text
     except sr.UnknownValueError:
         return "Google Speech Recognition could not understand the audio."
+        
     except sr.RequestError as e:
         return "Could not request results from Google Speech Recognition service; {0}".format(e)
 
@@ -37,11 +37,11 @@ def text_to_speech(text):
     # Speak the text
     engine.say(text)
     engine.runAndWait()
+
 prompt='''
 You are an excellent Customer Service Assistant with excellent hold in technical services and you are tasked to get the details of the customer who is interacting with you by asking them in a conversational way.
 
 Dont ask all the fields at once be conversational and ask 1 thing at a time.
-
 
 The details that you need to get are 
 Full Name: String Format First_Name Middle_Name Last_Name
@@ -53,12 +53,9 @@ Preffered date and time for technical assistants visit: Date and period of day (
 
 You have to be very polite and in a way interactive with the user and not force him to provide information necessarily. If the user doesnt give any information do not force them to give. just leave it blank. 
 once you get the deatils tell the user that the technical assistant will be reaching at their preferred time at their place
+after getting all the information you need to give a json representation of the information whenever the user says goodbye.
 
 '''
-
-
-model = genai.GenerativeModel('gemini-pro')
-
 
 messages=[]
 messages.append({
@@ -79,33 +76,52 @@ messages.append({
   })
 
 
-def generate_response():
-    while True:
-        message= speech_to_text()
-        print("You:",messages)
-        messages.append({
-            'role':'user',
-            'parts':[message]
-          })
-        response = model.generate_content(messages)
-        messages.append({
-            'role':'model',
-            'parts':[response.text]
+def generate_response(user_input):
+
+    message= user_input
+    messages.append({
+        'role':'user',
+        'parts':[message]
         })
-        print("CVA:", response.text)
+    
+    response = model.generate_content(messages)
+    # if(response )
+    messages.append({
+        'role':'model',
+        'parts':[response.text]
+    })
+
+    return response.text
+
+        
+type(messages)
+        
 def main():
     intro = "Hey, this is Ethan. How may I help you?"
-    text_to_speech(intro)
     print("CVA:", intro)
+    text_to_speech(intro)    
     user_input=""
-    n =0
-    while (user_input!="goodbye"):
-        # user_input = speech_to_text()/
-        print("User:", user_input)
-        # if(n==0):
-        CVA_response = generate_response()
-        print(CVA_response)
-        text_to_speech(CVA_response)
 
+    while True:
+        user_input = speech_to_text()
+        print("User:", user_input)
+        if "goodbye" in user_input:
+            json_save()
+            break
+
+        response= generate_response(user_input)
+
+        print("CVA:", response)
+        text_to_speech(response)
+
+    
+
+def json_save():    
+    with open('data.json', 'w') as outfile:
+        for i in range(len(messages)):
+             if("```json" in messages[i]['parts']):
+                to_dump=messages[i]['parts']
+        json.dump(to_dump, outfile)
 if __name__ == "__main__":
     main()
+    json_save()
