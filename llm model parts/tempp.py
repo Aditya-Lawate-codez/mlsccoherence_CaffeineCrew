@@ -1,42 +1,10 @@
-import speech_recognition as sr
-import pyttsx3
+import json
 import google.generativeai as genai
 import json
 GOOGLE_API_KEY='AIzaSyBKFI9vTUNZ2b4sQh-IRSrRb0zb98QsL8o'
 
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
-
-def speech_to_text():
-    # Initialize the recognizer
-    recognizer = sr.Recognizer()
-
-    # Record audio from the microphone
-    with sr.Microphone() as source:
-        print("Speak something...")
-        audio = recognizer.listen(source)
-
-    # Recognize speech using Google Speech Recognition
-    try:
-        text = recognizer.recognize_google(audio)
-        return text
-    except sr.UnknownValueError:
-        return "Google Speech Recognition could not understand the audio."
-        
-    except sr.RequestError as e:
-        return "Could not request results from Google Speech Recognition service; {0}".format(e)
-
-def text_to_speech(text):
-    # Initialize the text-to-speech engine
-    engine = pyttsx3.init()
-
-    # Set properties for the speech
-    engine.setProperty('rate', 180)  # Speed of speech
-    engine.setProperty('volume', 0.9)  # Volume (0.0 to 1.0)
-
-    # Speak the text
-    engine.say(text)
-    engine.runAndWait()
 
 prompt='''
 You are an excellent Customer Service Assistant with excellent hold in technical services and you are tasked to get the details of the customer who is interacting with you by asking them in a conversational way.
@@ -99,11 +67,11 @@ type(messages)
 def main():
     intro = "Hey, this is Ethan. How may I help you?"
     print("CVA:", intro)
-    text_to_speech(intro)    
+    print(intro)    
     user_input=""
 
     while True:
-        user_input = speech_to_text()
+        user_input = input()
         print("User:", user_input)
         if "goodbye" in user_input:
             json_save()
@@ -112,7 +80,7 @@ def main():
         response= generate_response(user_input)
 
         print("CVA:", response)
-        text_to_speech(response)
+        # print(response)
 
     
 
@@ -121,7 +89,7 @@ def json_save():
 
     for item in messages:
         if item['role'] == 'model':
-            if 'JSON representation' in item['parts'][0]:
+            if '```\n' in item['parts'][0]:
                 desired_json_representation = item['parts'][0].split('```')[1]
                 break
 
@@ -133,6 +101,8 @@ def json_save():
     else:
         print("Desired JSON representation not found.")
 
+
 if __name__ == "__main__":
     main()
+    print(messages)
     json_save()
