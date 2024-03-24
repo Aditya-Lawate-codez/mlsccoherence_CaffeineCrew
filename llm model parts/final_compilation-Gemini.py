@@ -1,10 +1,12 @@
 import speech_recognition as sr
 import pyttsx3
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from Google_Gemini import Gemini as gmn
-# Load the tokenizer and model using TensorFlow weights
-tokenizer = AutoTokenizer.from_pretrained("Kaludi/Customer-Support-Assistant-V2")
-model = AutoModelForSeq2SeqLM.from_pretrained("Kaludi/Customer-Support-Assistant-V2", from_tf=True)
+# from Google_Gemini import Gemini as gmn
+import google.generativeai as genai
+GOOGLE_API_KEY='AIzaSyBKFI9vTUNZ2b4sQh-IRSrRb0zb98QsL8o'
+
+genai.configure(api_key=GOOGLE_API_KEY)
+
+model = genai.GenerativeModel('gemini-pro')
 
 def speech_to_text():
     # Initialize the recognizer
@@ -54,32 +56,54 @@ once you get the deatils tell the user that the technical assistant will be reac
 
 '''
 
-def generate_response(user_input):
-    input_ids= tokenizer.encode(prompt+user_input, return_tensors='pt')
-    # Tokenize the user input
-    # input_ids = tokenizer(user_input, return_tensors="pt").input_ids
 
-    # Generate a response from the model
-    output = model.generate(input_ids, max_length=50, num_return_sequences=1)
-    
-    # Decode and return the response
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
-    return response
+model = genai.GenerativeModel('gemini-pro')
+
+
+messages=[]
+messages.append({
+    'role':'user',
+    'parts':[prompt]})
+
+messages.append({
+    'role':'model',
+    'parts':"What's Your name?"           
+    })
+messages.append({
+    'role':'user',
+    'parts':"Hi"
+  })
+messages.append({
+    'role':'model',
+    'parts':"Hi, there, thank you for contacting us! My name is ethan, and I'm here to assist you today. Could you tell me your full name so I can address you properly?"
+  })
+
+
+def generate_response():
+    while True:
+        message= speech_to_text()
+        print("You:",messages)
+        messages.append({
+            'role':'user',
+            'parts':[message]
+          })
+        response = model.generate_content(messages)
+        messages.append({
+            'role':'model',
+            'parts':[response.text]
+        })
+        print("CVA:", response.text)
 def main():
-
     intro = "Hey, this is Ethan. How may I help you?"
     text_to_speech(intro)
     print("CVA:", intro)
     user_input=""
     n =0
     while (user_input!="goodbye"):
-        user_input = speech_to_text()
+        # user_input = speech_to_text()/
         print("User:", user_input)
-        if(n==0):
-            CVA_response = generate_response(prompt + user_input)
-            n+=1
-        CVA_response = generate_response(user_input)
-
+        # if(n==0):
+        CVA_response = generate_response()
         print(CVA_response)
         text_to_speech(CVA_response)
 
