@@ -27,7 +27,6 @@ model user{
     address String
     problem_detail String
     nature_of_issue String
-    date String
 }
 
 model account{
